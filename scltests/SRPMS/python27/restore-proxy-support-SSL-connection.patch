@@ -1,0 +1,16 @@
+diff --git a/setuptools/ssl_support.py b/setuptools/ssl_support.py
+--- a/setuptools/ssl_support.py
++++ b/setuptools/ssl_support.py
+@@ -194,6 +194,12 @@
+         sock = create_connection(
+             (self.host, self.port), getattr(self,'source_address',None)
+         )
++
++        # Handle the socket if a (proxy) tunnel is present
++        if hasattr(self, '_tunnel') and getattr(self, '_tunnel_host', None):
++            self.sock = sock
++            self._tunnel()
++
+         self.sock = ssl.wrap_socket(
+             sock, cert_reqs=ssl.CERT_REQUIRED, ca_certs=self.ca_bundle
+         )

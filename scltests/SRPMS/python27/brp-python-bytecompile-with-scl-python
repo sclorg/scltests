@@ -1,0 +1,37 @@
+#!/bin/bash
+# Altered from brp-python-bytecompile
+errors_terminate=$2
+
+# If using normal root, avoid changing anything.
+if [ -z "$RPM_BUILD_ROOT" -o "$RPM_BUILD_ROOT" = "/" ]; then
+       exit 0
+fi
+
+# If we don't have a python interpreter, exit.
+python=$1
+if [ ! -x "$python" ]; then
+       exit 2
+fi
+
+# Figure out how deep we need to descend.  We could pick an insanely high
+# number and hope it's enough, but somewhere, somebody's sure to run into it.
+depth=`(find $RPM_BUILD_ROOT -type f -name "*.py" -print0 ; echo /) | \
+       xargs -0 -n 1 dirname | sed 's,[^/],,g' | sort -u | tail -n 1 | wc -c`
+if [ -z "$depth" -o "$depth" -le "1" ]; then
+       exit 0
+fi
+
+# Generate normal (.pyc) byte-compiled files.
+$python -c 'import compileall, re, sys; sys.exit (not compileall.compile_dir("'"$RPM_BUILD_ROOT"'", '"$depth"', "/", 1, re.compile(r"'"/bin/|/sbin/"'"), quiet=1))'
+if [ $? -ne 0 -a 0$errors_terminate -ne 0 ]; then
+       # One or more of the files had a syntax error
+      exit 1
+fi
+
+# Generate optimized (.pyo) byte-compiled files.
+$python -O -c 'import compileall, re, sys; sys.exit(not compileall.compile_dir("'"$RPM_BUILD_ROOT"'", '"$depth"', "/", 1, re.compile(r"'"/bin/|/sbin/"'"), quiet=1))' > /dev/null
+if [ $? -ne 0 -a 0$errors_terminate -ne 0 ]; then
+       # One or more of the files had a syntax error
+       exit 1
+fi
+exit 0

@@ -1,0 +1,13 @@
+
+- bin file
+- tests are needed for scltests
+- documentation
+- what if metapackage is not built
+- dependant builds only one metapackage in buildroot
+- test for nfsmountable
+- for cyclus for building in each separate pytest
+- pytest output (self.msg? rpms[n])
+- what about /var/cache/mock
+- dependant works?
+- mock error handling
+- possiblity to run only with specified configs?

@@ -1,0 +1,16 @@
+# override __os_install_post for this collection
+# the python27_os_install_post macro is defined in macros.python2.python27 in python27-python-devel
+# the name is intentionally hardcoded to always provide the same name
+%scl_package_override() %{expand:%{?@scl@_os_install_post:%global __os_install_post %@scl@_os_install_post}
+%global __python_requires %@scl@_python_requires
+%global __python_provides %@scl@_python_provides
+# macros commonly used in specfiles
+%global __python2 %@scl@__python2
+%global __python %@scl@__python2
+%global python2_sitelib %@scl@python2_sitelib
+%global python_sitelib %@scl@python2_sitelib
+%global python2_sitearch %@scl@python2_sitearch
+%global python_sitearch %@scl@python2_sitearch
+%global python2_version %@scl@python2_version
+%global python_version %@scl@python2_version
+}

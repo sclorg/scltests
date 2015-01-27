@@ -1,0 +1,117 @@
+macros:
+# Write down macros which you can use later to expand some repetative values in yaml file.
+# For example if you define macro `_scl_root = '/opt/rh/{scl}/root' you can later use it 
+# as {_scl_root}/some/path which will expand automatically to /opt/rh/python27/root/some/path.
+# Note that you can use {scl} format value in your macro.
+# Note that that are already some predefined macros: _scl_prefix, _bindir, _scl_root, _datadir,
+# _mandir, _initddir
+  bin: '/opt/rh/{scl}/root/usr/bin'
+  root: '/opt/rh/{scl}/root'
+
+# Write a metapackage of a collection
+meta: 'python27.spec'
+
+# Write down ordered list of packages from collection
+packages:
+    - 'python.spec'
+    - 'python-setuptools.spec'
+
+# If there is another collection which depends on this
+dependant: false
+
+rpms:
+  arch:
+   - 'python27-1.1-1'
+   - 'python27-build-1.1-1'
+   - 'python27-runtime-1.1-1'
+   - 'python27-scldevel-1.1-1'
+   - 'python27-python-2.7.5-1'
+   - 'python27-python-debuginfo-2.7.5-1'
+   - 'python27-python-devel-2.7.5-1'
+   - 'python27-python-libs-2.7.5-1'
+   - 'python27-python-test-2.7.5-1'
+  noarch:
+   - 'python27-python-setuptools-0.9.8-2'
+
+# tested options currently we test list, provides and requires
+
+list: # -qpl
+    python27-1.1-1:
+      has:
+        - '(contains no files)'
+    python27-build-1.1-1:
+      has:
+        - '/etc/rpm/macros.python27-config'
+    python27-scldevel-1.1-1:
+      has:
+        - '/etc/rpm/macros.python-scldevel'
+    python27-python-2.7.5-1:
+      has:
+        - '{bin}/python'
+        - '/opt/rh/python27/root/usr/bin/python2'
+        - '/opt/rh/python27/root/usr/bin/python2.7'
+      not:
+        - '/usr/bin/python'
+    python27-python-debuginfo-2.7.5-1:
+      has:
+        - '(contains no files)'
+    python27-python-devel-2.7.5-1:
+      has:
+        - '/etc/rpm/macros.python2.python27'
+        - '/usr/lib/rpm/pythondeps-scl.sh'
+        - '/usr/lib/rpm/redhat/brp-python-bytecompile-with-scl-python'
+    python27-python-libs-2.7.5-1:
+      has:
+        - '/opt/rh/python27/root/usr/lib/python2.7'
+        - '/opt/rh/python27/root/usr/lib/python2.7/site-packages'
+        - '/opt/rh/python27/root/usr/lib64/python2.7'
+        - '/opt/rh/python27/root/usr/lib64/python2.7/site-packages'
+    python27-python-test-2.7.5-1:
+      has:
+        - '(contains no files)'
+    python27-python-setuptools-0.9.8-2:
+      has:
+        - '/opt/rh/python27/root/usr/lib/python2.7/site-packages/setuptools'
+        - '/opt/rh/python27/root/usr/share/doc/python27-python-setuptools'
+        - '/opt/rh/python27/root/usr/bin/easy_install-2.7'
+
+provides: # -qp --provides
+    python27-1.1-1:
+      has:
+        - 'python27 = 1.1-1.{dist}'
+        - 'python27({arch}) = 1.1-1.{dist}'
+        - 'scl-package(python27)'
+    python27-build-1.1-1:
+      has:
+        - 'python27-build = 1.1-1.{dist}'
+        - 'python27-build({arch}) = 1.1-1.{dist}'
+        - 'scl-package(python27)'
+    python27-python-2.7.5-1:
+      has:
+        - 'python27-Distutils'
+        - 'python27-python = 2.7.5-1.{dist}'
+        - 'python27-python(abi) = 2.7'
+        - 'python27-python({arch}) = 2.7.5-1.{dist}'
+        - 'python27-python-argparse = 2.7.5-1.{dist}'
+        - 'python27-python-ctypes = 1.0.1'
+        - 'python27-python-hashlib = 20081120'
+        - 'python27-python-sqlite = 2.3.2'
+        - 'python27-python-uuid = 1.31'
+        - 'python27-python2 = 2.7.5'
+    python27-python-devel-2.7.5-1:
+      has:
+        - 'python27-python-devel = 2.7.5-1.{dist}'
+        - 'python27-python-devel({arch}) = 2.7.5-1.{dist}'
+        - 'python27-python2-devel = 2.7.5-1.{dist}'
+    python27-python-debuginfo-2.7.5-1:
+      has:
+        - 'python27-python-debuginfo = 2.7.5-1.{dist}'
+        - 'python27-python-debuginfo({arch}) = 2.7.5-1.{dist}'
+        - 'scl-package(python27)'
+    python27-python-setuptools-0.9.8-2:
+      has:
+        - 'python27-python-distribute = 0.9.8-2.{dist}'
+        - 'python27-python-setuptools = 0.9.8-2.{dist}'
+        - 'python27-python-setuptools-devel = 0.9.8-2.{dist}'
+        - 'scl-package(python27)'
+

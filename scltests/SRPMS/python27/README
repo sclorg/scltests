@@ -1,0 +1,40 @@
+Package %{scl_name} provides Python 2.7 interpreter with a set of extension
+packages delivered as a Software Collection. For more information about
+Software Collections, see the scl(1) man page. By installing the %{scl_name}
+collection, you will get Python 2.7 interpreter and several extension packages
+useful for web applications development.
+
+Usage: scl enable %{scl} 'python'
+
+Software Collections allow you to build and execute applications
+which are not located in the filesystem root hierarchy,
+but are stored in an alternative location, which is %{_scl_root}
+in case of the %{scl_name} collection.
+
+Python is an interpreted, interactive, object-oriented programming
+language often compared to Tcl, Perl, Scheme or Java. Python includes
+modules, classes, exceptions, very high level dynamic data types and
+dynamic typing. Python supports interfaces to many system calls and
+libraries, as well as to various windowing systems (X11, Motif, Tk,
+Mac and MFC).
+
+When you want to work with the %{scl_name} collection, use the scl
+utility (see the scl(1) man page for usage) to enable the scl
+environment.
+
+Examples:
+scl enable %{scl_name} 'command --arg'
+  Run a specific command with the argument --arg within the %{scl_name}
+  software collections environment.
+
+scl enable %{scl_name} 'python'
+  Run python from the %{scl_name} software collection.
+
+scl enable %{scl_name} bash
+  Run an interactive shell with the %{scl_name} software collection enabled.
+
+scl enable %{scl_name} 'man python'
+  Show man pages for the python command, which is a part of the
+  %{scl_name} software collection.
+
+Report bugs to <http://bugzilla.redhat.com>.

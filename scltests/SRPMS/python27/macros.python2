@@ -1,0 +1,25 @@
+# define these macros in a way which will expand them to correct values even for non-scl-build, assuming 's/@scl@//'
+%@scl@__python2
+%@scl@__python %@scl@__python2
+%@scl@python2_sitelib /opt/rh/python27/root/usr/lib/python2.7/site-packages
+%@scl@python_sitelib %@scl@python2_sitelib
+%@scl@python2_sitearch %{_libdir}/python2.7/site-packages
+%@scl@python_sitearch %@scl@python2_sitearch
+%@scl@python2_version 2.7
+%@scl@python_version %@scl@python2_version
+
+# these macros won't be needed if doing non-scl build, so define them in a way that won't overwrite system ones
+%@scl@_os_install_post \
+    /usr/lib/rpm/brp-scl-compress %{_scl_root} \
+    %{!?__debug_package:/usr/lib/rpm/brp-strip %{__strip} \
+    /usr/lib/rpm/brp-strip-comment-note %{__strip} %{__objdump} \
+    } \
+    /usr/lib/rpm/brp-strip-static-archive %{__strip} \
+    %{!?_turn_off_bytecompile:scl enable @scl@ '/usr/lib/rpm/redhat/brp-python-bytecompile-with-scl-python %@scl@__python2 %{?_python_bytecompile_errors_terminate_build} %{_scl_root}'} \
+    /usr/lib/rpm/brp-python-hardlink
+
+%@scl@_python_provides /usr/lib/rpm/pythondeps-scl.sh --provides %{?scl:@scl@-}
+%@scl@_python_requires /usr/lib/rpm/pythondeps-scl.sh --requires %{?scl:@scl@-}
+
+
+%_python_bytecompile_errors_terminate_build 1
