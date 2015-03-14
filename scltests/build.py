@@ -1,6 +1,7 @@
 import collections
 import os
 import re
+import sys
 import subprocess
 
 from scltests import collection, cfg, settings
@@ -76,9 +77,10 @@ class BuildCollection(object):
         Build single srpm with mock.
         """
         path_to_srpm = self.make_srpm(path_to_specfile)
-        code = subprocess.call(['mock', '-r', self.mock_config.name, '--configdir', \
-                                self.mock_config.config_dir, '--resultdir', self.mock_config.result_dir, \
-                                path_to_srpm])
+        with open('/dev/null', 'w') as devnull:
+            code = subprocess.call(['mock', '-r', self.mock_config.name, '--configdir', \
+                                    self.mock_config.config_dir, '--resultdir', self.mock_config.result_dir, \
+                                    path_to_srpm], stdout=devnull)
         createrepo(self.mock_config.result_dir)
         rename_logs(path_to_srpm, self.mock_config.result_dir)
         return code
