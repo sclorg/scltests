@@ -59,7 +59,7 @@ def prepare(config_name):
     return mock_config
 
 def rpm_proc(rpm_path, **kw):
-    proc = subprocess.Popen(['rpm', '-qp{0}'.format(kw.get('option', '')), rpm_path, '{0}'.format(kw.get('long_option', ''))], stdout=subprocess.PIPE)
+    proc = subprocess.Popen(['rpm', '-qp{0}'.format(kw.get('option', '')), rpm_path, '--{0}'.format(kw.get('long_option', ''))], stdout=subprocess.PIPE)
     msg = proc.stdout.read().decode('utf-8')
     return msg.strip().split('\n')
 
