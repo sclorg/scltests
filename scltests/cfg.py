@@ -44,13 +44,13 @@ class MockConfig(object):
     @property
     def dist(self):
         if self.config_opts['dist'] == 'rawhide':
-            return 'fc{0}'.format(int(self.config_opts['releasever'])+1)
+            return 'fc{0}'.format(int(self.config_opts['releasever']) + 1)
         if self.config_opts['dist'].startswith('el'):
             return '{0}.centos'.format(self.config_opts['dist'])
         return self.config_opts['dist']
 
     def _add_exclude(self, package):
-        #TODO maybe add option to define from which section we want to exclude package
+        # TODO maybe add option to define from which section we want to exclude package
         """
         Exclude package from repositories except for 'main', 'scltests'
         and 'localscl' repositories.
@@ -72,7 +72,7 @@ class MockConfig(object):
 
         for section in sections:
             config.set(section, 'exclude', '{0}*'.format(package))
-        
+
         new_yum_conf = None
         try:
             output = StringIO()
@@ -127,3 +127,8 @@ class MockConfig(object):
             self.root = self.edit_opt('root', '_'+self.epoch_time)
         return self.epoch_time
 
+
+def prepare(config_name, local_scl):
+    mock_config = MockConfig(config_name, local_scl)
+    mock_config.save()
+    return mock_config

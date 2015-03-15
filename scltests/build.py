@@ -4,8 +4,8 @@ import re
 import subprocess
 import sys
 
-from scltests import collection, settings
-from scltests.misc import createrepo, prepare, rename_logs
+from scltests import collection, settings, cfg
+from scltests.misc import createrepo, rename_logs
 
 
 class BuildCollection(object):
@@ -25,7 +25,7 @@ class BuildCollection(object):
     @property
     def mock_config(self):
         if not hasattr(self, '_mock_config'):
-            self._mock_config = prepare(self.config_name, self.local_scl)
+            self._mock_config = cfg.prepare(self.config_name, self.local_scl)
             createrepo(self._mock_config.result_dir)
         return self._mock_config
 
