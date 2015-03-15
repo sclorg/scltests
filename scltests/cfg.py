@@ -116,15 +116,18 @@ class MockConfig(object):
         if replace:
             self.config_opts[key] = value
         else:
-            self.config_opts[key] = self.config_opts[key]+value
+            self.config_opts[key] = self.config_opts[key] + value
         self.save()
         return self.config_opts[key]
+
+    def reset_opt(self, key):
+        self.edit_opt(key, self.default_opts[key], replace=True)
 
     def _change_chroot_name(self):
         if not hasattr(self, 'epoch_time'):
             import time
             self.epoch_time = str(int(time.time()))
-            self.root = self.edit_opt('root', '_'+self.epoch_time)
+            self.root = self.edit_opt('root', '_{0}'.format(self.epoch_time))
         return self.epoch_time
 
 
