@@ -12,7 +12,11 @@ Usage: run-tests.py [OPTIONS] SCLS CFGS
   Run tests for given software collections SCLS and mock configs CFGS. SCLS
   and CFGS accepts multiple values in format scl1:scl2:scl3 or
   cfg1:cfg2:cfg3 where sclX is name of software collection from order.yaml
-  file and cfgX is name of mock config without .cfg suffix.
+  file and cfgX is name of mock config without .cfg suffix. You can also use
+  all as parameter which means exactly what you would expect. all can be
+  also chained with other values, e.g. all:python27 would mean -  build
+  every collection except for python27, same applies for configs.
+
 
 Options:
   --local-scl PATH  Provide path to folder which contains scl-utils
