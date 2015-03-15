@@ -55,6 +55,10 @@ class DynamicClassBase(unittest.TestCase):
 
 def create_run_order(scls, cfgs):
     run_order = {}
+    if 'all' in scls:
+        scls = get_build_order()
+    if 'all' in cfgs:
+        cfgs = get_mock_configs()
     for cfg in cfgs:
         run_order[cfg] = scls
     return run_order
