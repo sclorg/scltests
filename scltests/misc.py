@@ -53,8 +53,8 @@ def build_all():
     """
     return list(itertools.product(get_mock_configs(), get_build_order()))
 
-def prepare(config_name):
-    mock_config = cfg.MockConfig(config_name)
+def prepare(config_name, local_scl):
+    mock_config = cfg.MockConfig(config_name, local_scl)
     mock_config.save()
     return mock_config
 
@@ -74,34 +74,3 @@ def rpms_to_parametrized(): # TODO get rid of this and think of something smarte
     test_rpms = [Collection(scl)['rpms']['arch'] + Collection(scl)['rpms']['noarch'] for scl in scls]
     ziped_rpms = izip_longest(*test_rpms)
     return [dict(zip(scls, rpms)) for rpms in ziped_rpms]
-
-
-class CheckDecorator(object):
-
-
-    def __init__(self, option):
-        self.option = option
-
-    def __call__(self, fn):
-        @functools.wraps(fn)
-        def wrapper(fn, fn_self, *args):
-            test_option_values = fn_self.yaml.get(self.option, None)
-
-            if not test_option_values:
-                pytest.skip('Skipping because {0}.yaml does not contain test values for option: {1}'.format(fn_self.scl.name, self.option))
-            
-            tested_rpm = args[0].get(fn_self.scl.name)
-
-            value = fn_self.yaml.get(self.option).get(tested_rpm)
-
-            if value is None:
-                pytest.skip('Skipping because {0} package is not listed in tested option: {1}.'.format(tested_rpm, self.option))
-
-            if tested_rpm is None:
-                pytest.skip('Skipping None rpm.')
-
-            if tested_rpm not in fn_self.collection.rpms_dict:
-                pytest.skip('Skipping {0} package as it is not in built packages.'.format(tested_rpm))
-
-            return fn(fn_self, *args)
-        return decorator(wrapper, fn)

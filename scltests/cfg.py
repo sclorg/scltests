@@ -13,7 +13,7 @@ from scltests import settings
 
 class MockConfig(object):
     config_dir = settings.CONFIG_DIR
-    
+
     def __init__(self, name, local_scl=None):
         self.name = name
         self.local_scl = local_scl
@@ -111,7 +111,6 @@ class MockConfig(object):
 
     def save(self):
         self._save(default=False)
-
 
     def edit_opt(self, key, value, replace=False):
         if replace:

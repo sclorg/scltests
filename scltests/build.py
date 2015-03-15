@@ -1,30 +1,30 @@
 import collections
 import os
 import re
-import sys
 import subprocess
 
-from scltests import collection, cfg, settings
+from scltests import collection, settings
 from scltests.misc import createrepo, prepare, rename_logs
 
 
 class BuildCollection(object):
-    
+
     dep_config = None
 
-    def __init__(self, scl_name, config_name):
+    def __init__(self, scl_name, config_name, local_scl):
         if BuildCollection.dep_config:
             self._mock_config = BuildCollection.dep_config
             BuildCollection.dep_config = None
         self.config_name = config_name
         self.scl_name = scl_name
         self.built = False
+        self.local_scl = local_scl
         self._srpms = []
 
     @property
     def mock_config(self):
         if not hasattr(self, '_mock_config'):
-            self._mock_config = prepare(self.config_name)
+            self._mock_config = prepare(self.config_name, self.local_scl)
             createrepo(self._mock_config.result_dir)
         return self._mock_config
 
@@ -78,14 +78,12 @@ class BuildCollection(object):
         """
         path_to_srpm = self.make_srpm(path_to_specfile)
         with open('/dev/null', 'w') as devnull:
-            code = subprocess.call(['mock', '-r', self.mock_config.name, '--configdir', \
-                                    self.mock_config.config_dir, '--resultdir', self.mock_config.result_dir, \
+            code = subprocess.call(['mock', '-r', self.mock_config.name, '--configdir',
+                                    self.mock_config.config_dir, '--resultdir', self.mock_config.result_dir,
                                     path_to_srpm], stdout=devnull)
         createrepo(self.mock_config.result_dir)
         rename_logs(path_to_srpm, self.mock_config.result_dir)
         return code
-
-    
 
     def make_srpm(self, specfile):
         """
@@ -109,8 +107,8 @@ class BuildCollection(object):
 
     def build(self):
         """
-        Build whole collection. 
-        Metapackage is built as first. Metapackage and build order is defined 
+        Build whole collection.
+        Metapackage is built as first. Metapackage and build order is defined
         in the yaml file of collection.
         """
         try:
@@ -127,5 +125,3 @@ class BuildCollection(object):
         finally:
             self.mock_config.reset()
             self.delete_srpms()
-
-
