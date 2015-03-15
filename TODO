@@ -3,7 +3,6 @@
 - same cfg for multiple collections
 - tests are needed for scltests
 - documentation
-- what if metapackage is not built
 - dependant builds only one metapackage in buildroot
 - what about /var/cache/mock
 - dependant works?

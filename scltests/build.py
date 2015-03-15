@@ -2,6 +2,7 @@ import collections
 import os
 import re
 import subprocess
+import sys
 
 from scltests import collection, settings
 from scltests.misc import createrepo, prepare, rename_logs
@@ -112,7 +113,9 @@ class BuildCollection(object):
         in the yaml file of collection.
         """
         try:
-            self._build_rpm(self.scl.meta)
+            meta_return_code = self._build_rpm(self.scl.meta)
+            if meta_return_code:
+                sys.exit('ERROR: Metapackage wasn\'t built, exiting.')
             self.mock_config.edit_opt('chroot_setup_cmd', ' {0}-build'.format(self.scl.name))
             for package in self.scl.packages:
                 self._build_rpm(package)
