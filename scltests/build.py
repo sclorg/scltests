@@ -82,7 +82,8 @@ class BuildCollection(object):
             code = subprocess.call(['mock', '-r', self.mock_config.name, '--configdir',
                                     self.mock_config.config_dir, '--resultdir', self.mock_config.result_dir,
                                     path_to_srpm], stdout=devnull)
-        createrepo(self.mock_config.result_dir)
+        if not code:
+            createrepo(self.mock_config.result_dir)
         rename_logs(path_to_srpm, self.mock_config.result_dir)
         return code
 
