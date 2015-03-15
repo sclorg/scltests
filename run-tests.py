@@ -35,17 +35,17 @@ class CFGType(click.ParamType):
 def make_test_function(rpm_option, rpm):
     def test(self):
         if self.collection.rpms_dict.get(rpm) is None:
-            raise unittest.SkipTest('{} not found.'.format(rpm))
+            raise unittest.SkipTest('Package {0}  wasnt build.'.format(rpm))
         _, abs_path_rpm = self.collection.rpms_dict.get(rpm)
         expected_values = self.tests[rpm_option][rpm].get('has', [])
         expected_values = [value.format(**self.macros) for value in expected_values]
         actual_values = rpm_proc(abs_path_rpm, long_option=rpm_option)
-        redudant = set(expected_values) - set(actual_values)
-        self.assertFalse(redudant, msg='Missing: {}'.format(redudant))
+        redudant = list(set(expected_values) - set(actual_values))
+        self.assertFalse(redudant, msg='Following expected values wasnt found: {}'.format(redudant))
 
         not_expected = self.tests[rpm_option][rpm].get('not', [])
-        redudant = set(not_expected) - set(actual_values)
-        self.assertFalse(redudant, msg='Redudant: {}'.format(redudant))
+        redudant = list(set(not_expected) - set(actual_values))
+        self.assertFalse(redudant, msg='Unexpected values was found: {}'.format(redudant))
     return test
 
 
