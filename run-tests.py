@@ -15,6 +15,8 @@ class SCLType(click.ParamType):
         expected_scl = get_build_order()
         expected_scl.append('all')
         actual_scl = value.split(':')
+        if 'all' in actual_scl and len(actual_scl) != 1:
+            self.fail('You can not specify multiple values when \'all\' is used.')
         if set(actual_scl) - set(expected_scl):
             self.fail('You must choose from following options: {}.'.format(expected_scl))
         return actual_scl
@@ -26,6 +28,8 @@ class CFGType(click.ParamType):
         expected_cfgs = get_mock_configs()
         expected_cfgs.append('all')
         actual_cfgs = value.split(':')
+        if 'all' in actual_cfgs and len(actual_cfgs) != 1:
+            self.fail('You can not specify multiple values when \'all\' is used.')
         if set(actual_cfgs) - set(expected_cfgs):
             self.fail('You must choose from following options: {}.'.format(expected_cfgs))
         return actual_cfgs
