@@ -80,7 +80,6 @@ def make_tests(run_order, local_scl):
     for cfg, collections in run_order.items():
         for collection in collections:
             klassname = 'Test_{0}_{1}'.format(collection, cfg)
-            suites.append(klassname)
             # build collection
             build_collection = build.BuildCollection(collection, cfg, local_scl)
             build_collection.build()
@@ -97,12 +96,16 @@ def make_tests(run_order, local_scl):
             macros['dist'] = build_collection.mock_config.dist
             macros['arch'] = build_collection.mock_config['target_arch'].replace('_', '-')
             klass_objects['macros'] = macros
-            globals()[klassname] = type(klassname, (DynamicClassBase,), klass_objects)
+            # create test class
+            suites.append(type(klassname, (DynamicClassBase,), klass_objects))
 
+    # custom test runner for coloured unittest output
     from colour_runner import runner as clr_run
+    # make test suite
     loader = unittest.TestLoader()
-    suites = [loader.loadTestsFromTestCase(globals()[suite]) for suite in suites]
+    suites = [loader.loadTestsFromTestCase(suite) for suite in suites]
     suites = unittest.TestSuite(suites)
+    # run tests
     clr_run.ColourTextTestRunner(verbosity=2).run(suites)
 
 if __name__ == '__main__':
