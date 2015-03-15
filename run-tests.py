@@ -15,10 +15,12 @@ class SCLType(click.ParamType):
         expected_scl = get_build_order()
         expected_scl.append('all')
         actual_scl = value.split(':')
-        if 'all' in actual_scl and len(actual_scl) != 1:
-            self.fail('You can not specify multiple values when \'all\' is used.')
+        if 'all' in actual_scl:
+            actual_scl = list(set(expected_scl) - set(actual_scl))
         if set(actual_scl) - set(expected_scl):
-            self.fail('You must choose from following options: {}.'.format(expected_scl))
+            self.fail('You must choose from following options: {0}.'.format(expected_scl))
+        if not actual_scl:
+            self.fail('You\'ve tried to be too smart and you end up with nothing to build.')
         return actual_scl
 
 
@@ -28,10 +30,12 @@ class CFGType(click.ParamType):
         expected_cfgs = get_mock_configs()
         expected_cfgs.append('all')
         actual_cfgs = value.split(':')
-        if 'all' in actual_cfgs and len(actual_cfgs) != 1:
-            self.fail('You can not specify multiple values when \'all\' is used.')
+        if 'all' in actual_cfgs:
+            actual_cfgs = list(set(expected_cfgs) - set(actual_cfgs))
         if set(actual_cfgs) - set(expected_cfgs):
-            self.fail('You must choose from following options: {}.'.format(expected_cfgs))
+            self.fail('You must choose from following options: {0}.'.format(expected_cfgs))
+        if not actual_cfgs:
+            self.fail('You\'ve tried to be too smart and you end up with nothing to build with.')
         return actual_cfgs
 
 
@@ -59,10 +63,6 @@ class DynamicClassBase(unittest.TestCase):
 
 def create_run_order(scls, cfgs):
     run_order = {}
-    if 'all' in scls:
-        scls = get_build_order()
-    if 'all' in cfgs:
-        cfgs = get_mock_configs()
     for cfg in cfgs:
         run_order[cfg] = scls
     return run_order
@@ -75,9 +75,12 @@ def create_run_order(scls, cfgs):
 def main(scls, cfgs, local_scl):
     """
     Run tests for given software collections SCLS and mock configs CFGS.
-    SCLS and CFGS accepts multiple values in format scl1:scl2:scl3
-    or cfg1:cfg2:cfg3 where sclX is name of software collection from order.yaml
+    SCLS and CFGS accepts multiple values in format scl1:scl2:scl3 or 
+    cfg1:cfg2:cfg3 where sclX is name of software collection from order.yaml
     file and cfgX is name of mock config without .cfg suffix.
+    You can also use all as parameter which means exactly what you would expect.
+    all can be also chained with other values, e.g. all:python27 would mean - 
+    build every collection except for python27, same applies for configs.
     """
     run_order = create_run_order(scls, cfgs)
     make_tests(run_order, local_scl)
