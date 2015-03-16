@@ -6,20 +6,36 @@ First, you have to meet the requirements, you have to have `python-click`, `PyYA
 
 ```
 > $ ./run-tests.py --help
-Usage: run-tests.py [OPTIONS] SCLS CFGS
+Usage: run-tests.py [OPTIONS] COMMAND [ARGS]...
 
-  Run tests for given software collections SCLS and mock configs CFGS. SCLS
-  and CFGS accepts multiple values in format scl1:scl2:scl3 or
-  cfg1:cfg2:cfg3 where sclX is name of software collection from order.yaml
-  file and cfgX is name of mock config without .cfg suffix. You can also use
-  all as parameter which means exactly what you would expect. all can be
-  also chained with other values, e.g. all:python27 would mean -  build
-  every collection except for python27, same applies for configs.
+  Scltests builds and tests your software collections according to your
+  defined yaml config.
 
+Options:
+  -h, --help  Show this message and exit.
+
+Commands:
+  list  list available collections and mock configs
+  test  build and test collection(s)
+
+
+
+> $ ./run-tests.py test -h                                                                                
+Usage: run-tests.py test [OPTIONS] SCLS CFGS
+
+  Run tests for given software collections SCLS and mock configs CFGS.
+
+Arguments:
+
+  SCLS and CFGS accept multiple values in format foo1:foo2 where fooX is
+  name of software collection or mock config (see list for available
+  options). Is it possible also to use all as argument. Note: all:foo1
+  specifies all available collections or configs except foo1.
 
 Options:
   --local-scl PATH  Provide path to folder which contains scl-utils
                     repository.
-  --help            Show this message and exit.
+  -h, --help        Show this message and exit.
+
 ```
 
