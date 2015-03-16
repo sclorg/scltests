@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import unittest
 
@@ -18,9 +19,9 @@ class SCLType(click.ParamType):
         if 'all' in actual_scl:
             actual_scl = list(set(expected_scl) - set(actual_scl))
         if set(actual_scl) - set(expected_scl):
-            self.fail('You must choose from following options: {0}.'.format(expected_scl))
+            self.fail(u'You must choose from following options: {0}.'.format(expected_scl))
         if not actual_scl:
-            self.fail('You\'ve tried to be too smart and you end up with nothing to build.')
+            self.fail(u'¯\_(ツ)_/¯ You\'ve tried to be too smart and you end up with nothing to build.')
         return actual_scl
 
 
@@ -33,10 +34,12 @@ class CFGType(click.ParamType):
         if 'all' in actual_cfgs:
             actual_cfgs = list(set(expected_cfgs) - set(actual_cfgs))
         if set(actual_cfgs) - set(expected_cfgs):
-            self.fail('You must choose from following options: {0}.'.format(expected_cfgs))
+            self.fail(u'You must choose from following options: {0}.'.format(expected_cfgs))
         if not actual_cfgs:
-            self.fail('You\'ve tried to be too smart and you end up with nothing to build with.')
+            self.fail(u'¯\_(ツ)_/¯ You\'ve tried to be too smart and you end up with nothing to build with.')
         return actual_cfgs
+
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 
 # make test stubs
@@ -68,7 +71,7 @@ def create_run_order(scls, cfgs):
     return run_order
 
 
-@click.command()
+@click.command(context_settings=CONTEXT_SETTINGS)
 @click.argument('scls', type=SCLType())
 @click.argument('cfgs', type=CFGType())
 @click.option('--local-scl', type=click.Path(exists=True, resolve_path=True), help='Provide path to folder which contains scl-utils repository.')
