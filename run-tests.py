@@ -71,19 +71,40 @@ def create_run_order(scls, cfgs):
     return run_order
 
 
-@click.command(context_settings=CONTEXT_SETTINGS)
+@click.group(context_settings=CONTEXT_SETTINGS)
+def cli():
+    """
+    Scltests builds and tests your software collections according to your defined
+    yaml config.
+    """
+    pass
+
+
+@cli.command('list', short_help='list available collections and mock configs')
+def list_cmd():
+    """
+    List available collections and mock configs.
+    """
+    click.echo()
+    click.echo('Available software collections: {}'.format(':'.join(get_build_order())))
+    click.echo('Available mock configs: {}'.format(':'.join(get_mock_configs())))
+
+
+@cli.command('test', short_help='build and test collection(s)')
 @click.argument('scls', type=SCLType())
 @click.argument('cfgs', type=CFGType())
 @click.option('--local-scl', type=click.Path(exists=True, resolve_path=True), help='Provide path to folder which contains scl-utils repository.')
-def main(scls, cfgs, local_scl):
+def test_cmd(scls, cfgs, local_scl):
     """
     Run tests for given software collections SCLS and mock configs CFGS.
-    SCLS and CFGS accepts multiple values in format scl1:scl2:scl3 or 
-    cfg1:cfg2:cfg3 where sclX is name of software collection from order.yaml
-    file and cfgX is name of mock config without .cfg suffix.
-    You can also use all as parameter which means exactly what you would expect.
-    all can be also chained with other values, e.g. all:python27 would mean - 
-    build every collection except for python27, same applies for configs.
+
+    \b\bArguments:
+
+    SCLS and CFGS accept multiple values in format foo1:foo2 where fooX is name of
+    software collection or mock config (see list for available options).
+    Is it possible also to use all as argument.
+    Note: all:foo1 specifies all available collections or configs except foo1.
+
     """
     run_order = create_run_order(scls, cfgs)
     make_tests(run_order, local_scl)
@@ -123,4 +144,4 @@ def make_tests(run_order, local_scl):
     clr_run.ColourTextTestRunner(verbosity=2).run(suites)
 
 if __name__ == '__main__':
-    main()
+    cli()
