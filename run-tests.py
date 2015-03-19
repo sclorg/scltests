@@ -144,7 +144,7 @@ def make_tests(run_order, local_scl):
     suites = [loader.loadTestsFromTestCase(suite) for suite in suites]
     suites = unittest.TestSuite(suites)
     # run tests
-    TextTestRunner(verbosity=2).run(suites)
+    Runner(verbosity=2).run(suites)
 
 if __name__ == '__main__':
     cli()
