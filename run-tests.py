@@ -98,8 +98,8 @@ def test_cmd(scls, cfgs, local_scl):
     """
     Run tests for given software collections SCLS and mock configs CFGS.
 
+    \b
     \b\bArguments:
-
     SCLS and CFGS accept multiple values in format foo1:foo2 where fooX is name of
     software collection or mock config (see list for available options).
     Is it possible also to use all as argument.
@@ -135,13 +135,16 @@ def make_tests(run_order, local_scl):
             suites.append(type(klassname, (DynamicClassBase,), klass_objects))
 
     # custom test runner for coloured unittest output
-    from colour_runner import runner as clr_run
+    try:
+        from colour_runner.runner import ColourTextTestRunner as Runner
+    except ImportError:
+        from unittest import TextTestRunner as Runner
     # make test suite
     loader = unittest.TestLoader()
     suites = [loader.loadTestsFromTestCase(suite) for suite in suites]
     suites = unittest.TestSuite(suites)
     # run tests
-    clr_run.ColourTextTestRunner(verbosity=2).run(suites)
+    TextTestRunner(verbosity=2).run(suites)
 
 if __name__ == '__main__':
     cli()
