@@ -4,7 +4,6 @@ CONFIG_DIR = os.path.abspath('./scltests/configs/MOCK')
 RESULT_DIR = os.path.abspath('./scltests/RPMS')
 YAML_DIR = os.path.abspath('./scltests/configs/YAML')
 SRPMS_DIR = os.path.abspath('./scltests/SRPMS')
-ORDER = '{0}/{1}'.format(YAML_DIR, 'order.yaml')
 
 REPO = """
 [{name}]

@@ -31,11 +31,9 @@ def rename_logs(path, result_dir):
 
 def get_build_order():
     """
-    Returns order of building as defined in order.yaml
+    Returns order of building 
     """
-    with open(settings.ORDER, 'r') as f:
-        order = yaml.load(f)
-    return order['order']
+    return os.listdir(settings.SRPMS_DIR)
 
 
 def get_mock_configs():

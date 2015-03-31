@@ -1,3 +1,0 @@
-# Order in which we want to build collection
-order:
-    - 'python27'
