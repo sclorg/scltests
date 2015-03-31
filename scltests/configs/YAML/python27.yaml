@@ -3,8 +3,6 @@ macros:
 # For example if you define macro `_scl_root = '/opt/rh/{scl}/root' you can later use it 
 # as {_scl_root}/some/path which will expand automatically to /opt/rh/python27/root/some/path.
 # Note that you can use {scl} format value in your macro.
-# Note that that are already some predefined macros: _scl_prefix, _bindir, _scl_root, _datadir,
-# _mandir, _initddir
   bin: '/opt/rh/{scl}/root/usr/bin'
   root: '/opt/rh/{scl}/root'
 
@@ -15,9 +13,6 @@ meta: 'python27.spec'
 packages:
     - 'python.spec'
     - 'python-setuptools.spec'
-
-# If there is another collection which depends on this
-dependant: false
 
 rpms:
   arch:
@@ -33,11 +28,11 @@ rpms:
   noarch:
    - 'python27-python-setuptools-0.9.8-2'
 
-# tested options currently we test list, provides and requires
 tests:
+  # you can use any value recognized by rpm to create tests list for --list requires for --requires and so on
   list: # -qpl
       python27-1.1-17:
-        has:
+        has: # tested package must contain following values
           - '(contains no files)'
       python27-build-1.1-17:
         has:
@@ -50,7 +45,7 @@ tests:
           - '{bin}/python'
           - '/opt/rh/python27/root/usr/bin/python2'
           - '/opt/rh/python27/root/usr/bin/python2.7'
-        not:
+        not: # tested package can not containt following values
           - '/usr/bin/python'
       python27-python-debuginfo-2.7.5-1:
         has:
