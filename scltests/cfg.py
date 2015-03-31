@@ -6,9 +6,12 @@ except ImportError:
     from io import StringIO
 
 import io
+import logging
 import os
 
 from scltests import settings
+
+logger = logging.getLogger(__name__)
 
 
 class MockConfig(object):
@@ -81,6 +84,7 @@ class MockConfig(object):
         finally:
             output.close()
 
+        logger.info('Added exclude for {0} into following sections {1}'.format(package, sections))
         return new_yum_conf
 
     def _load_opts(self):

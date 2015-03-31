@@ -1,3 +1,4 @@
+import logging
 import os
 import subprocess
 import sys
@@ -6,13 +7,15 @@ import yaml
 from scltests import settings
 
 # TODO change file locations of those functions according the usage
+logger = logging.getLogger(__name__)
 
 PY3 = sys.version_info.major == 3
 
 
 def createrepo(path):
     """Creates or updates repository at given full path."""
-    code = subprocess.call(['createrepo', path])
+    with open('/dev/null', 'w') as devnull:
+        code = subprocess.call(['createrepo', path], stdout=devnull)
     return code
 
 
@@ -21,7 +24,9 @@ def rename_logs(path, result_dir):
     name = os.path.basename(path)
     name.replace('src.rpm', '')
     for log in settings.LOGS:
-        os.rename('{0}/{1}'.format(result_dir, log), '{0}/{1}-{2}'.format(result_dir, name, log))
+        new_name = '{0}/{1}-{2}'.format(result_dir, name, log)
+        os.rename('{0}/{1}'.format(result_dir, log), new_name)
+        logger.info('{0} log file renamed to {1}.'.format(log, new_name))
 
 
 def get_build_order():

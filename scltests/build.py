@@ -1,4 +1,5 @@
 import collections
+import logging
 import os
 import re
 import subprocess
@@ -6,6 +7,8 @@ import sys
 
 from scltests import collection, settings, cfg
 from scltests.misc import createrepo, rename_logs
+
+logger = logging.getLogger(__name__)
 
 
 class BuildCollection(object):
@@ -27,6 +30,7 @@ class BuildCollection(object):
         if not hasattr(self, '_mock_config'):
             self._mock_config = cfg.prepare(self.config_name, self.local_scl)
             createrepo(self._mock_config.result_dir)
+            logger.info('Creating repo at {0}'.format(self._mock_config.result_dir))
         return self._mock_config
 
     @property
@@ -78,12 +82,18 @@ class BuildCollection(object):
         Build single srpm with mock.
         """
         path_to_srpm = self.make_srpm(path_to_specfile)
+        srpm = os.path.basename(path_to_srpm)
+        logger.info('Starting build of {0}'.format(srpm))
         with open('/dev/null', 'w') as devnull:
             code = subprocess.call(['mock', '-r', self.mock_config.name, '--configdir',
                                     self.mock_config.config_dir, '--resultdir', self.mock_config.result_dir,
-                                    path_to_srpm], stdout=devnull)
+                                    path_to_srpm], stdout=devnull, stderr=devnull)
         if not code:
+            logger.info('Package {0} was built successfully'.format(srpm))
             createrepo(self.mock_config.result_dir)
+            logger.info('Updating repository')
+        else:
+            logger.info('{0} build failed'.format(srpm))
         rename_logs(path_to_srpm, self.mock_config.result_dir)
         return code
 
@@ -101,11 +111,13 @@ class BuildCollection(object):
                                        '-bs', specfile])
         srpm = re.search(r'\/.*\.rpm', msg.strip().decode('utf-8')).group()
         self._srpms.append(srpm)
+        logger.info('Created {0} from {1}'.format(os.path.basename(srpm), os.path.basename(specfile)))
         return srpm
 
     def delete_srpms(self):
         for srpm in self._srpms:
             os.remove(srpm)
+        logger.info('SRPMS deleted')
 
     def build(self):
         """
