@@ -77,7 +77,7 @@ def make_test_function(rpm_option, rpm):
 
         not_expected = self.tests[rpm_option][rpm].get('not', [])
         redudant = list(set(not_expected) - set(actual_values))
-        self.assertFalse(redudant, msg='Unexpected values was found: {}'.format(redudant))
+        self.assertFalse(redudant, msg='Unexpected values were found: {}'.format(redudant))
     return test
 
 
