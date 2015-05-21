@@ -2,7 +2,7 @@
 Simple tests designed to keep up with regressions in scl-utils
 
 How to run **scltests**?  
-First, you have to meet the requirements, you have to have `python-click`, `PyYAML`, `mock`, `createrepo`, `scl-utils-build` and `colour_runner` (which is not yet packaged for fedora therefore `pip install colour_runner` is needed, currently it is only optional dep for coloured output of tests) installed. Also user under which you will run these tests must be in user group `mock`
+First, you have to meet the requirements, you have to have `python-click`, `PyYAML`, `mock`, `createrepo`, `scl-utils-build` and `python-colour-runner` (optional dependency) installed. Also user under which you will run these tests must be in user group `mock`
 
 ```
 > $ ./run-tests.py --help
